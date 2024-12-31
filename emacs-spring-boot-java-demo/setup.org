@@ -73,6 +73,11 @@
     (unless (file-directory-p lsp-java-server-install-dir)
       (lsp-install-server 'jdtls))
 
+    (use-package company
+      :ensure t
+      :config
+      (global-company-mode))  ;; Enable company-mode globally
+    
     (use-package projectile
       :ensure t
       :init
@@ -85,12 +90,12 @@
     "Run the main class in the current buffer."
     (interactive)
     (let* ((project-root "~/code/utils/demo/")  ;; Replace with your project root
-         (relative-path (file-relative-name (buffer-file-name) project-root))
-         (class-name (replace-regexp-in-string
-                      "/" "."
-                      (file-name-sans-extension
-                       (string-remove-prefix "src/main/java/" relative-path))))
-         (cmd (format "mvn spring-boot:run")))
+	 (relative-path (file-relative-name (buffer-file-name) project-root))
+	 (class-name (replace-regexp-in-string
+		      "/" "."
+		      (file-name-sans-extension
+		       (string-remove-prefix "src/main/java/" relative-path))))
+	 (cmd (format "mvn spring-boot:run")))
     (compile cmd)))
 
 

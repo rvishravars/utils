@@ -1,0 +1,61 @@
+# Java related
+### Compiled class files
+*.class
+
+### Log files
+*.log
+
+### Maven related
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Gradle related
+.gradle/
+build/
+
+### Eclipse related
+.project
+.classpath
+.settings/
+
+### IntelliJ IDEA related
+.idea/
+*.iml
+out/
+
+### NetBeans related
+nbproject/
+
+# Python related
+### Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+### Python virtual environment
+venv/
+ENV/
+env/
+.venv/
+venv.bak/
+
+### Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+### PyCharm related
+.idea/
+
+### VS Code related
+.vscode/
+
+# System files
+### macOS
+.DS_Store
+
+### Windows
+Thumbs.db
+Desktop.ini
+
+### Linux
+*~
+

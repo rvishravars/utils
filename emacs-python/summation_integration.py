@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
 
+# Install following sudo apt-get install python3-tk
+import matplotlib
+matplotlib.use('TkAgg')  # or 'Qt5Agg' or 'WebAgg' based on your environment
+
 # Summation Example: Total Sales for Each Day of the Week
 sales = [150, 200, 250, 300, 350, 400, 450]  # Sales for each day from Monday to Sunday
 total_sales = sum(sales)

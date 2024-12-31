@@ -1,0 +1,138 @@
+#+TITLE: Emacs Python Editor Setup
+
+* Setup for Python Development in Emacs
+  This guide helps configure Emacs for Python development with features like syntax highlighting, autocompletion, virtual environment support, and more.
+
+** Prerequisites
+   - Ensure you have Emacs installed.
+   - Install Python on your system.
+   - Install =pip=, the Python package manager.
+
+** Install Necessary Packages
+   Use Emacs' package manager to install required packages.
+
+   #+BEGIN_SRC emacs-lisp
+   (require 'package)
+   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+   (package-initialize)
+   (unless package-archive-contents
+     (package-refresh-contents))
+   (dolist (package '(use-package elpy pyvenv blacken flycheck))
+     (unless (package-installed-p package)
+       (package-install package)))
+   #+END_SRC
+
+   #+RESULTS:
+
+** Configure Elpy for Python Development
+   Enable Elpy, a comprehensive Python development environment.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package elpy
+     :ensure t
+     :init
+     (elpy-enable))
+   #+END_SRC
+
+   #+RESULTS:
+
+** Virtual Environment Management
+   Use =pyvenv= for managing virtual environments. Set `myenv` as the default environment.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package pyvenv
+     :ensure t
+     :config
+     (setenv "WORKON_HOME" "~/.virtualenvs")
+     (pyvenv-activate "~/.virtualenvs/myenv")  ; Set myenv as default environment
+     (pyvenv-mode 1))
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
+** Code Formatting with Black
+   Automatically format Python code using Black.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package blacken
+     :ensure t
+     :hook (python-mode . blacken-mode))
+   #+END_SRC
+
+   #+RESULTS:
+   | blacken-mode | elpy-mode |
+
+** Syntax Checking with Flycheck
+   Use Flycheck for real-time syntax checking.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package flycheck
+     :ensure t
+     :init (global-flycheck-mode))
+   #+END_SRC
+
+   #+RESULTS:
+
+** Additional Settings
+   - Enable line numbers.
+   - Use =show-paren-mode= to highlight matching parentheses.
+
+   #+BEGIN_SRC emacs-lisp
+   (global-display-line-numbers-mode)
+   (show-paren-mode 1)
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
+** Test the Setup
+   Open a Python file to test the configured features. Ensure syntax highlighting, autocompletion, and formatting work as expected.
+
+** Troubleshooting
+   If you encounter issues:
+   - Verify the installed packages.
+   - Check the Emacs *Messages* buffer for errors.
+   - Ensure your Python virtual environment is activated.
+
+* Global evaluate 
+   #+BEGIN_SRC emacs-lisp
+
+     (use-package pyvenv
+       :ensure t
+       :config
+       (pyvenv-activate "~/.virtualenvs/myenv")  ; Ensure myenv is activated globally
+       (pyvenv-mode 1))
+
+     (use-package elpy
+       :ensure t
+       :init
+       (elpy-enable))
+
+     (use-package company
+       :ensure t
+       :init (global-company-mode))
+
+     (use-package company-jedi
+       :ensure t
+       :config
+       (add-to-list 'company-backends 'company-jedi))
+
+     (use-package lsp-mode
+       :ensure t
+       :hook (python-mode . lsp-deferred)
+       :commands (lsp lsp-deferred))
+
+     (use-package lsp-pyright
+       :ensure t
+       :hook (python-mode . (lambda ()
+             (require 'lsp-pyright)
+             (lsp))))
+
+   #+END_SRC
+
+   #+RESULTS:
+   | (lambda nil (require 'lsp-pyright) (lsp)) | lsp-deferred | blacken-mode | elpy-mode |
+
+* Conclusion
+  With this setup, you have a robust Python development environment in Emacs.
