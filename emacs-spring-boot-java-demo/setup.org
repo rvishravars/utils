@@ -1,0 +1,100 @@
+#+TITLE: Emacs Java Development Setup
+#+AUTHOR: Your Name
+#+DATE: <2024-12-31>
+#+OPTIONS: toc:nil
+
+* Java Setup
+  Configure Emacs for Java development, including support for compiling and running Java programs.
+
+  #+BEGIN_SRC emacs-lisp
+    (require 'package)
+    (setq package-archives
+	  '(("melpa" . "https://melpa.org/packages/")
+	    ("gnu" . "https://elpa.gnu.org/packages/")))
+    (package-initialize)
+    (unless package-archive-contents
+      (package-refresh-contents))
+
+    ;; Install use-package if not already installed
+    (unless (package-installed-p 'use-package)
+      (package-install 'use-package))
+    (require 'use-package)
+    (setq use-package-always-ensure t)
+
+    ;; Install and configure lsp-java for Java support
+    (use-package lsp-java
+      :ensure t
+      :config
+      (add-hook 'java-mode-hook #'lsp-deferred)
+      ;; Configure compilation and running
+      (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
+      (setq lsp-java-format-settings-profile "GoogleStyle"))
+
+    ;; Optional: Install dap-mode for debugging
+    (use-package dap-mode
+      :ensure t
+      :after lsp-mode
+      :config
+      (dap-auto-configure-mode))
+
+    ;; Optional: Enable company-mode for autocompletion
+    (use-package company
+      :ensure t
+      :config
+      (add-hook 'java-mode-hook 'company-mode))
+
+    ;; Optional: Flycheck for real-time syntax checking
+    (use-package flycheck
+      :ensure t
+      :init (global-flycheck-mode))
+
+    ;; Shortcut to compile and run Java files
+    (defun my-java-compile-and-run ()
+      "Compile and run the current Java program."
+      (interactive)
+      (let ((file (buffer-file-name))
+	    (output (file-name-sans-extension (buffer-file-name))))
+	(when (and file (string= (file-name-extension file) "java"))
+	  (compile (format "javac %s && java %s"
+			   file
+			   (file-name-nondirectory output))))))
+    (add-hook 'java-mode-hook
+	      (lambda ()
+		(local-set-key (kbd "C-c C-c") 'my-java-compile-and-run)))
+
+    ;; Ensure the Java language server is installed
+    (use-package lsp-mode
+      :ensure t
+      :config
+      (setq lsp-java-server-install-dir
+	    (expand-file-name "~/.emacs.d/eclipse.jdt.ls/server/")))
+
+    ;; Install Java LSP server if not installed
+    (unless (file-directory-p lsp-java-server-install-dir)
+      (lsp-install-server 'jdtls))
+
+    (use-package projectile
+      :ensure t
+      :init
+      (projectile-mode +1)
+      :bind-keymap
+      ("C-c p" . projectile-command-map))
+
+
+    (defun lsp-java-run-main-class ()
+    "Run the main class in the current buffer."
+    (interactive)
+    (let* ((project-root "~/code/utils/demo/")  ;; Replace with your project root
+         (relative-path (file-relative-name (buffer-file-name) project-root))
+         (class-name (replace-regexp-in-string
+                      "/" "."
+                      (file-name-sans-extension
+                       (string-remove-prefix "src/main/java/" relative-path))))
+         (cmd (format "mvn spring-boot:run")))
+    (compile cmd)))
+
+
+  #+END_SRC
+
+  #+RESULTS:
+  : lsp-java-run-main-class
