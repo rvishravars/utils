@@ -1,3 +1,9 @@
 numpy
 matplotlib
 scipy
+torch
+torchvision
+torchaudio
+notebook
+tensorflow
+sklearn

@@ -131,8 +131,5 @@
 
    #+END_SRC
 
-   #+RESULTS:
-   | (lambda nil (require 'lsp-pyright) (lsp)) | lsp-deferred | blacken-mode | elpy-mode |
-
 * Conclusion
   With this setup, you have a robust Python development environment in Emacs.
